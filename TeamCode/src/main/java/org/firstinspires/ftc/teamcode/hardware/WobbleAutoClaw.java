@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class WobbleAutoClaw {
     // SERVO POSITIONS
-    private final double UP = 0.0;
+    private final double OPEN = 0.0;
     private final double MID = 0.5;
-    private final double DOWN = 1.0;
+    private final double CLOSE = 1.0;
 
     // SERVOS
     private int numServos = 1;
@@ -25,15 +25,15 @@ public class WobbleAutoClaw {
         }
     }
 
-    public void up() {
-        servos[WOBBLE_AUTO_CLAW_SERVO].setPosition(UP);
+    public void open() {
+        servos[WOBBLE_AUTO_CLAW_SERVO].setPosition(OPEN);
     }
 
     public void mid(){
         servos[WOBBLE_AUTO_CLAW_SERVO].setPosition(MID);
     }
 
-    public void down(){
-        servos[WOBBLE_AUTO_CLAW_SERVO].setPosition(DOWN);
+    public void close() {
+        servos[WOBBLE_AUTO_CLAW_SERVO].setPosition(CLOSE);
     }
 }

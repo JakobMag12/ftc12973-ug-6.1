@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Reicher Robotics on 3/4/2018.
  */
 
-public class OuttakeSwivel {
+public class TrapDoor {
     // SERVO POSITIONS
     private final double UP = 0.0;
     private final double MID = 0.5;
@@ -15,25 +15,25 @@ public class OuttakeSwivel {
 
     // SERVOS
     private int numServos = 1;
-    private int OUTTAKE_SWIVEL = 0;
+    private int TRAP_DOOR_SERVO = 0;
 
     public Servo[] servos = new Servo[numServos];
 
-    public OuttakeSwivel(HardwareMap hwMap, String[] servoNames){
+    public TrapDoor(HardwareMap hwMap, String[] servoNames){
         for(int i = 0; i < numServos; i++){
             servos[i] = hwMap.servo.get(servoNames[i]);
         }
     }
 
     public void up() {
-        servos[OUTTAKE_SWIVEL].setPosition(UP);
+        servos[TRAP_DOOR_SERVO].setPosition(UP);
     }
 
     public void mid(){
-        servos[OUTTAKE_SWIVEL].setPosition(MID);
+        servos[TRAP_DOOR_SERVO].setPosition(MID);
     }
 
     public void down(){
-        servos[OUTTAKE_SWIVEL].setPosition(DOWN);
+        servos[TRAP_DOOR_SERVO].setPosition(DOWN);
     }
 }

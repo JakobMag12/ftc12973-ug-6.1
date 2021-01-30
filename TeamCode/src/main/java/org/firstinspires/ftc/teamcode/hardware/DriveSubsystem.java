@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode.CommandSample;
+package org.firstinspires.ftc.teamcode.hardware;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.drivebase.DifferentialDrive;
 import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class DriveSubsystem extends SubsystemBase {
+public class DriveSubsystem {
 
     private final DifferentialDrive m_drive;
 

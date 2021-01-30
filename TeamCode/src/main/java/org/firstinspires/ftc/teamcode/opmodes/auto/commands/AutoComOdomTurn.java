@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.commands;
 
-import org.firstinspires.ftc.teamcode.opmodes.RobotOpModes;
-
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.opmodes.RobotOpModes;
 
 
 /**
  * Created by Reicher Robotics on 3/25/2018.
  */
 
-public class AutoComGyroTurn extends AutoCommandMain {
+public class AutoComOdomTurn extends AutoCommandMain {
     private double maxSpeed = 0.0;
     private double minSpeed = 0.1;
     private double targetHeading = 0.0;
@@ -19,7 +19,7 @@ public class AutoComGyroTurn extends AutoCommandMain {
     private boolean tooLong = false;
     ElapsedTime endTime = new ElapsedTime();
 
-    public AutoComGyroTurn(RobotOpModes opMode, double speed, double angle){
+    public AutoComOdomTurn(RobotOpModes opMode, double speed, double angle){
         super(opMode);
 
         this.maxSpeed = speed;
@@ -27,7 +27,7 @@ public class AutoComGyroTurn extends AutoCommandMain {
         maxTime = 100.0;
     }
 
-    public AutoComGyroTurn(RobotOpModes opMode, double speed, double angle, double time){
+    public AutoComOdomTurn(RobotOpModes opMode, double speed, double angle, double time){
         super(opMode);
 
         this.maxSpeed = speed;
@@ -53,16 +53,19 @@ public class AutoComGyroTurn extends AutoCommandMain {
 
     @Override
     public boolean IsTaskRunning(){
-        return !onHeading((int)bot.gyroIMU.getHeading()) && !opMode.isStopRequested() && !tooLong;
+        return !onHeading() && !opMode.isStopRequested() && !tooLong;
     }
 
-    private boolean onHeading(int currentHeading) {
+    private boolean onHeading() {
         boolean onTarget = false;
+        double currentHeading;
         double steer;
         double leftSpeed;
         double rightSpeed;
         double finalError;
 
+        bot.odometry.updatePosition(bot.leftEncoder.getDistance(), bot.rightEncoder.getDistance());
+        currentHeading = bot.odometry.getPose().getHeading();
         if (Math.abs(targetHeading - currentHeading) <= tolerance) {
             leftSpeed  = 0.0;
             rightSpeed = 0.0;

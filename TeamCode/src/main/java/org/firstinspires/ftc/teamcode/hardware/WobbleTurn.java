@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class WobbleTurn {
     // SERVO POSITIONS
-    private final double UP = 0.0;
+    private final double IN = 0.0;
     private final double MID = 0.5;
-    private final double DOWN = 1.0;
+    private final double OUT = 1.0;
 
     // SERVOS
     private int numServos = 1;
@@ -25,15 +25,15 @@ public class WobbleTurn {
         }
     }
 
-    public void up() {
-        servos[WOBBLE_TURN_SERVO].setPosition(UP);
+    public void in() {
+        servos[WOBBLE_TURN_SERVO].setPosition(IN);
     }
 
     public void mid(){
         servos[WOBBLE_TURN_SERVO].setPosition(MID);
     }
 
-    public void down(){
-        servos[WOBBLE_TURN_SERVO].setPosition(DOWN);
+    public void out(){
+        servos[WOBBLE_TURN_SERVO].setPosition(OUT);
     }
 }

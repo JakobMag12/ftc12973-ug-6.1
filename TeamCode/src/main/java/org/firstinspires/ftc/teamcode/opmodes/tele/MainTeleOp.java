@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.tele;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
+import org.firstinspires.ftc.teamcode.hardware.DifferentialDrive;
 import org.firstinspires.ftc.teamcode.lib.Controller;
 import org.firstinspires.ftc.teamcode.opmodes.RobotOpModes;
 
@@ -16,11 +17,10 @@ public class MainTeleOp extends RobotOpModes {
     private Controller controller1;
     private Controller controller2;
 
-    private boolean TRIGGER;
+    private boolean TRIGGERED;
     private boolean INTAKE;
-    private boolean RAMP;
-    private boolean EXTENDED;
     private boolean LAUNCHED;
+    private boolean TRAP;
     private double rampHeight;
 
     private double maxDrivePower;
@@ -30,9 +30,10 @@ public class MainTeleOp extends RobotOpModes {
         super.runOpMode();
 
         // Flags
-        TRIGGER = false;
+        TRIGGERED = false;
         INTAKE = false;
-        EXTENDED = false;
+        LAUNCHED = false;
+        TRAP = false;
 
         maxDrivePower = 0.0;
 
@@ -41,7 +42,7 @@ public class MainTeleOp extends RobotOpModes {
         controller2 = new Controller(gamepad2);
 
         // Init
-        bot.initTeleOpServos();
+        //bot.initTeleOpServo();
         telemetry.addLine("Status Initialized");
         telemetry.update();
         waitForStart();
@@ -59,89 +60,79 @@ public class MainTeleOp extends RobotOpModes {
             // Left Joystick Left/Right - turn right/left
             // Right Joystick Left/Right - drive left/right
             // Either Joystick Button - slows down max speed, press slows
-            maxDrivePower = 1.0;
-            bot.WobbleTurn.tankDrive(maxDrivePower, controller1.leftJoystickYValue, controller1.leftJoystickXValue, controller1.rightJoystickXValue);
-
-            // Intake Wheels
+            bot.diffy.arcadeDrive(0.8, 0.8);
 
             if (controller1.yButton == Controller.ButtonState.PRESSED) {
-                bot.intakeDown.down();
+                bot.outtakeRamp.top();
             }
-            if (controller1.xButton == Controller.ButtonState.PRESSED) {
-                bot.intakeDown.up();
-            }
-
-            if (controller1.leftBumper == Controller.ButtonState.ON_PRESS) {
-                INTAKE = !INTAKE;
+            if (controller1.bButton == Controller.ButtonState.PRESSED) {
+                bot.outtakeRamp.mid();
             }
             if (controller1.aButton == Controller.ButtonState.PRESSED) {
-                bot.intake.out(0.5);
-                INTAKE = false;
-                RAMP = false;
-            } else if (INTAKE) {
-                bot.intake.in(0.8);
+                bot.outtakeRamp.power();
+            }
+
+            if (controller1.rightTrigger == Controller.ButtonState.PRESSED) {
+                bot.outtake.out(1.0);
             } else {
-                bot.intake.stop();
+                bot.outtake.stop();
             }
 
-            // Trigger
-            // Right Trigger
-            if (controller1.rightTrigger == Controller.ButtonState.ON_PRESS) {
-                bot.trigger.out();
+            if (controller1.leftBumper == Controller.ButtonState.PRESSED) {
+                bot.intake.in(1.0);
+                bot.guiderServo.in();
             }
-
-            if (controller1.rightTrigger == Controller.ButtonState.ON_RELEASE) {
-                bot.trigger.in();
-            }
-
             if (controller1.leftTrigger == Controller.ButtonState.PRESSED) {
-                bot.launcher.out(1.0);
-            } else {
-                bot.launcher.stop();
+                bot.intake.out(1.0);
+                bot.guiderServo.out();
             }
-            /*
-            if(controller1.dPadUp == Controller.ButtonState.PRESSED) {
-                if(rampHeight < 0.98) {
-                    rampHeight += 0.02;
+
+            if (controller1.leftBumper == Controller.ButtonState.PRESSED) {
+                TRIGGERED = !TRIGGERED;
+                if (TRIGGERED) {
+                    bot.outtakeTrigger.shoot();
+                } else {
+                    bot.outtakeTrigger.in();
                 }
-            }
-
-            if(controller1.dPadDown == Controller.ButtonState.PRESSED) {
-                if(rampHeight > 0.02) {
-                    rampHeight -= 0.02;
-                }
-            }
-
-            bot.ramp.setHeight(rampHeight);
-            */
-
-            if (controller1.dPadUp == Controller.ButtonState.ON_PRESS) {
-                bot.ramp.top();
-            }
-
-            if (controller1.dPadLeft == Controller.ButtonState.ON_PRESS) {
-                bot.ramp.mid();
-            }
-
-            if (controller1.dPadRight == Controller.ButtonState.ON_PRESS) {
-                bot.ramp.bottom();
-            }
-
-            if (controller1.dPadDown == Controller.ButtonState.ON_PRESS) {
-                bot.ramp.power();
             }
 
             /**********************************************************************************************
              * Controller 2 Controls
              **********************************************************************************************/
 
-            // Lift Control
-            // Left Joystick Y
-            bot.lift.liftWithLimits(controller2.rightJoystickYValue);
+            bot.wobbleLift.liftWithLimits(controller2.rightJoystickYValue);
 
-            // Lift Control
-            // Left Joystick Y
-            bot.extender.extend(controller2.leftJoystickYValue);
+            if (controller2.leftTrigger == Controller.ButtonState.PRESSED) {
+                bot.outtake.out(1.0);
+            } else {
+                bot.outtake.stop();
+            }
+
+            if (controller2.leftBumper == Controller.ButtonState.PRESSED) {
+                bot.wobbleTurn.in();
+                TRAP = !TRAP;
+                if (TRAP) {
+                    bot.trapDoor.down();
+                } else {
+                    bot.trapDoor.up();
+                }
+            }
+
+            if (controller2.leftBumper == Controller.ButtonState.PRESSED) {
+                TRIGGERED = !TRIGGERED;
+                if (TRIGGERED) {
+                    bot.outtakeTrigger.shoot();
+                } else {
+                    bot.outtakeTrigger.in();
+                }
+            }
+
+            if (controller2.bButton == Controller.ButtonState.PRESSED) {
+                bot.trapDoor.up();
+            }
+            if (controller2.aButton == Controller.ButtonState.PRESSED) {
+                bot.trapDoor.down();
+            }
         }
     }
 }

@@ -1,10 +1,7 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * A differential drive is one that has two motors or motor groups
@@ -23,7 +20,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  *     control their respective side of the robot.
  * </p>
  */
-public class SixWheelDropCenter extends RobotDrive {
+public class DifferentialDrive extends RobotDrive {
 
     public static final double kDefaultRightSideMultiplier = -1.0;
 
@@ -44,7 +41,7 @@ public class SixWheelDropCenter extends RobotDrive {
      */
 
 
-    public SixWheelDropCenter(Motor... myMotors) {
+    public DifferentialDrive(Motor... myMotors) {
         motors = myMotors;
         setRightSideInverted(true);
     }
@@ -60,7 +57,7 @@ public class SixWheelDropCenter extends RobotDrive {
      * @param myMotors The {@link Motor} objects in the differential drive. Must be in the order
      *                 of left, right.
      */
-    public SixWheelDropCenter(boolean autoInvert, Motor... myMotors) {
+    public DifferentialDrive(boolean autoInvert, Motor... myMotors) {
         motors = myMotors;
         setRightSideInverted(autoInvert);
     }
