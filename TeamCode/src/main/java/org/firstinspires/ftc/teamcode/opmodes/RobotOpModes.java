@@ -14,6 +14,6 @@ public abstract class RobotOpModes extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        bot = new Robot(hardwareMap);
+        bot = new Robot();
     }
 }

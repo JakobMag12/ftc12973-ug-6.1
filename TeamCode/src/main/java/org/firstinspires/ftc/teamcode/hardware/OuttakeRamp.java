@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class OuttakeRamp {
     // SERVO POSITIONS
-    private final double TOP = 0.0;
-    private final double MID = 0.5;
-    private final double POWER = 0.5;
-    private final double BOTTOM = 1.0;
+    public final double TOP = 0.430;
+    public final double POWER = 0.470;
+    public final double MID = 0.520;
+    public final double BOTTOM = 0.600;
 
     // SERVOS
     private int numServos = 1;
@@ -26,6 +26,9 @@ public class OuttakeRamp {
         }
     }
 
+    public void position(double position) {
+        servos[OUTTAKE_RAMP_SERVO].setPosition(position);
+    }
     public void top() {
         servos[OUTTAKE_RAMP_SERVO].setPosition(TOP);
     }

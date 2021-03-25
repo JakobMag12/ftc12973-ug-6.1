@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class WobbleAutoClaw {
     // SERVO POSITIONS
-    private final double OPEN = 0.0;
+    private final double OPEN = 1.0;
     private final double MID = 0.5;
-    private final double CLOSE = 1.0;
+    private final double CLOSE = 0.0;
 
     // SERVOS
     private int numServos = 1;

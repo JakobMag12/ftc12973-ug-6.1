@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.opmodes.RobotOpModes;
 /**
  * Created by Reicher Robotics on 3/25/2018.
  */
-
+/**
 public class AutoComOdomTurn extends AutoCommandMain {
     private double maxSpeed = 0.0;
     private double minSpeed = 0.1;
@@ -53,19 +53,16 @@ public class AutoComOdomTurn extends AutoCommandMain {
 
     @Override
     public boolean IsTaskRunning(){
-        return !onHeading() && !opMode.isStopRequested() && !tooLong;
+        return !onHeading((int)bot.gyroIMU.getHeading()) && !opMode.isStopRequested() && !tooLong;
     }
 
-    private boolean onHeading() {
+    private boolean onHeading(int currentHeading) {
         boolean onTarget = false;
-        double currentHeading;
         double steer;
         double leftSpeed;
         double rightSpeed;
         double finalError;
 
-        bot.odometry.updatePosition(bot.leftEncoder.getDistance(), bot.rightEncoder.getDistance());
-        currentHeading = bot.odometry.getPose().getHeading();
         if (Math.abs(targetHeading - currentHeading) <= tolerance) {
             leftSpeed  = 0.0;
             rightSpeed = 0.0;
@@ -80,7 +77,9 @@ public class AutoComOdomTurn extends AutoCommandMain {
             rightSpeed = maxSpeed * steer;
             leftSpeed = -rightSpeed;
         }
-        bot.diffy.tankDrive(leftSpeed, rightSpeed);
+        bot.differentialDriveTrain.setDrivePowers(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
         return onTarget;
     }
 }
+ */
+

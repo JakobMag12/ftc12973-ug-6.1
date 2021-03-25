@@ -9,23 +9,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class GuiderServo {
 
-    public enum GuiderPosition {
-        IN,
-        OUT,
-        UNKNOWN;
-    }
-
-    private final static double MIN_IN_LIMIT = 0.6;
-    private final static double MAX_IN_LIMIT = 2.5;
-    private final static double MIN_OUT_LIMIT = 1.05;
-    private final static double MAX_OUT_LIMIT = 1.25;
-
-
     private int numGuiderCRServos = 1;
 
     public CRServo guiderCRServos[] = new CRServo[numGuiderCRServos];
 
-    private int numGuiderAnalogSensors = 1;
     public GuiderServo(HardwareMap hwMap, String crServoNames[], CRServo.Direction crServoDirections[]){
         for(int i = 0; i < numGuiderCRServos; i++){
             guiderCRServos[i] = hwMap.crservo.get(crServoNames[i]);

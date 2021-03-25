@@ -45,4 +45,19 @@ public class IMU {
         angleError -= (360 * Math.floor(0.5 + (angleError / 360.0)));
         return angleError;
     }
+
+    public double getXHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return (angles.firstAngle + 360) % 360;
+    }
+
+    public double getYHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return (angles.secondAngle + 360) % 360;
+    }
+
+    public double getZHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return (angles.thirdAngle + 360) % 360;
+    }
 }

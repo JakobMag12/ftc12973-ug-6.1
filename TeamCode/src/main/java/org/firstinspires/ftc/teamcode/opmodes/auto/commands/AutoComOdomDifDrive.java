@@ -10,10 +10,12 @@ import org.firstinspires.ftc.teamcode.opmodes.RobotOpModes;
  */
 
 /**
-public class AutoComGyroDifDrive extends AutoCommandMain {
+public class AutoComOdomDifDrive extends AutoCommandMain {
     private double distance;
     private int targetTicks = 0;
     private double speed = 0.0;
+    private Pose2d currentPose, targetPose;
+    private double xDistance, yDistance;
 
     private double error;
     private double correction;
@@ -27,7 +29,7 @@ public class AutoComGyroDifDrive extends AutoCommandMain {
 
     ElapsedTime time = new ElapsedTime();
 
-    public AutoComGyroDifDrive(RobotOpModes opMode, double distance, double speed){
+    public AutoComOdomDifDrive(RobotOpModes opMode, double distance, double speed){
         super(opMode);
 
         this.speed = speed;
@@ -37,11 +39,9 @@ public class AutoComGyroDifDrive extends AutoCommandMain {
 
     @Override
     public void Start(){
-        bot.differentialDriveTrain.setDriveTargets(targetTicks, targetTicks);
-        bot.differentialDriveTrain.setMotorBreak(DcMotor.ZeroPowerBehavior.BRAKE);
-        bot.differentialDriveTrain.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bot.differentialDriveTrain.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
-        targetHeading = bot.gyroIMU.getHeading();
+        currentPose = bot.drive.getPoseEstimate();
+        targetHeading = currentPose.getHeading();
+        targetPose = new Pose2d(currentPose.getX() + distance, currentPose.getY(), targetHeading);
         prevError = 0.0;
         prevTime = 0.0;
         integral = 0.0;
@@ -52,24 +52,25 @@ public class AutoComGyroDifDrive extends AutoCommandMain {
     public void Loop(){
         currentTime = time.milliseconds();
         timeLapsed = currentTime - prevTime;
-        error = bot.gyroIMU.getError(targetHeading);
+        currentPose = bot.drive.getPoseEstimate();
+        error = currentPose.getHeading();
         integral += error * timeLapsed;
         derivative = (error - prevError) / timeLapsed;
         correction = bot.differentialDriveTrain.P * error + bot.differentialDriveTrain.I * integral + bot.differentialDriveTrain.D * derivative;
         prevTime = currentTime;
         prevError = error;
-        bot.differentialDriveTrain.differentialDrive(speed, -correction);
+        bot.drive.driveArcade(speed, -correction);
     }
 
     @Override
     public void Stop(){
-        bot.differentialDriveTrain.driveStop();
+        bot.drive.setMotorPowers(0.0, 0.0);
         bot.differentialDriveTrain.setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
     public boolean IsTaskRunning(){
-        return bot.differentialDriveTrain.is4MotorsBusy();
+        return (Math.sqrt(Math.pow(xDistance, 2.0) + Math.pow(yDistance, 2.0)) > error);
     }
 }
  */

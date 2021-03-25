@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 /**
@@ -13,28 +15,27 @@ import com.qualcomm.robotcore.hardware.CRServo;
  */
 
 public class WobbleLift {
-    private double TICKS_PER_REV = 103.6;
-    private double LIFT_PER_REV = 1.375 * Math.PI;
-    private double TICKS_PER_LIFT = TICKS_PER_REV / LIFT_PER_REV;
+    private double P = 2.0;
 
-    private double MAX_LIFT = 900.0;
-    private double MAX_LIFT_TICKS = convertLiftToTicks(MAX_LIFT);
-    private double MIN_LIFT = 0.5;
-    private double MIN_LIFT_TICKS = convertLiftToTicks(MIN_LIFT);
+    private double ZERO_VOLTAGE = 2.95;
+    private double GRAB_VOLTAGE = 0.8;
+    private double PID_VOLTAGE_RANGE = 0.3;
 
     private int numLiftMotors = 1;
 
     // 0 = Extension
     public DcMotor[] liftMotors = new DcMotor[numLiftMotors];
 
-    public WobbleLift(HardwareMap hwMap, String[] motorNames, DcMotorSimple.Direction[] motorDirections) {
+    public AnalogInput limit = null;
+
+    public WobbleLift(HardwareMap hwMap, String[] motorNames, DcMotorSimple.Direction[] motorDirections, String limitName) {
         for (int i = 0; i < numLiftMotors; i++) {
             liftMotors[i] = hwMap.dcMotor.get(motorNames[i]);
             liftMotors[i].setDirection(motorDirections[i]);
             liftMotors[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftMotors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
+        limit = hwMap.analogInput.get(limitName);
     }
 
     public boolean isMotorBusy() {
@@ -71,12 +72,22 @@ public class WobbleLift {
         liftMotors[0].setPower(power);
     }
 
+    public void upP(double power) {
+        double voltageError = (ZERO_VOLTAGE - getLimitVoltage()) / PID_VOLTAGE_RANGE;
+        up(P * voltageError * power);
+    }
+
     public void down() {
         liftMotors[0].setPower(-1.0);
     }
 
     public void down(double power) {
         liftMotors[0].setPower(-power);
+    }
+
+    public void downP(double power) {
+        double voltageError = (getLimitVoltage() - GRAB_VOLTAGE) / PID_VOLTAGE_RANGE;
+        down(P * voltageError * power);
     }
 
     public void setLiftTargets(int target) {
@@ -93,22 +104,23 @@ public class WobbleLift {
         setLiftTargets(-downTarget);
     }
 
+    // TODO: CHECK IF MOTOR ENCODER TICKS ARE GOING UP WHEN THE MOTOR IS GOING FORWARD
+    // IF TICKS GOING UP, RETURN POSITIVE
+    // IF TICKS GOING DOWN, ADD NEGATIVE SIGN TO FIX WRONG TICK SIGN
     public int getLiftPosition() {
-        return liftMotors[0].getCurrentPosition();
+        return -liftMotors[0].getCurrentPosition();
     }
 
     public void liftWithLimits(double power) {
         if (power > 0.0) {
-            up(power);
-        } else if (power < 0.0) {
-            down(-power);
+            if(!atZeroPosition()) {
+                upP(power);
+            }
+        } else if (!atGrabPosition()) {
+           downP(-power);
         } else {
             stop();
         }
-    }
-
-    public void overrideLimits() {
-        MIN_LIFT_TICKS = -MAX_LIFT_TICKS;
     }
 
     public void resetLimits() {
@@ -116,9 +128,20 @@ public class WobbleLift {
         liftMotors[0].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public int convertLiftToTicks(double lift) {
-        return (int) (lift * TICKS_PER_LIFT);
+    public double getLimitVoltage() {
+        return limit.getVoltage();
     }
 
+    public boolean atZeroPosition() {
+        return getLimitVoltage() > ZERO_VOLTAGE;
+    }
+
+    public boolean atGrabPosition() {
+        return getLimitVoltage() < GRAB_VOLTAGE;
+    }
+
+    public int convertAngleToTicks(double angle) {
+        return (int) (angle / 360 * 383.6);
+    }
 }
 

@@ -1,28 +1,19 @@
-/**
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.DriveMecanum;
 import org.firstinspires.ftc.teamcode.lib.Controller;
 import org.firstinspires.ftc.teamcode.opmodes.RobotOpModes;
-import org.firstinspires.ftc.teamcode.opmodes.auto.commands.AutoComGyroMecDrive;
-
 
 /**
  * Created by Reicher Robotics on 3/24/2018.
  */
-/**
-@Autonomous(name="Test", group="Test")
-//@Disabled
-public class AutoTest extends RobotOpModes {
 
-    private int currentTick = 0;
-    private double speed = 0.5;
-    private int frontLeftTicks, frontRightTicks, rearLeftTicks, rearRightTicks;
-    private DriveMecanum.DriveDirection[] directions = new DriveMecanum.DriveDirection[3];
+@Autonomous(name="Webcam Test", group="Test")
+//@Disabled
+public class WebcamTest extends RobotOpModes {
+
 
     private Controller controller1;
     ElapsedTime timer = new ElapsedTime();
@@ -30,18 +21,16 @@ public class AutoTest extends RobotOpModes {
     @Override
     public void runOpMode() throws InterruptedException {
         super.runOpMode();
+        controller1 = new Controller(gamepad1);
         // Init
         bot.initAutoServos();
-
+        telemetry.update();
 
         waitForStart();
 
-        new AutoComGyroMecDrive(this, 48.0, 0.0, 0.75).Run();
 
-
-        bot.driveMecanum.driveStop();
-        pause(10.0);
-
+        pause(1.0);
+        bot.initTeleOpServos();
     }
 
     ElapsedTime waitTime = new ElapsedTime();
@@ -51,4 +40,3 @@ public class AutoTest extends RobotOpModes {
         }
     }
 }
- */

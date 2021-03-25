@@ -77,7 +77,7 @@ public class AutoComGyroTurn extends AutoCommandMain {
             rightSpeed = maxSpeed * steer;
             leftSpeed = -rightSpeed;
         }
-        bot.diffy.tankDrive(leftSpeed, rightSpeed);
+        bot.driveMecanum.setDrivePowers(leftSpeed, leftSpeed, rightSpeed, rightSpeed);
         return onTarget;
     }
 }
