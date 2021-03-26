@@ -78,8 +78,8 @@ public class DriveMecanum {
     }
 
     public void setDriveXYTargets(int yTarget, int xTarget){
-        driveMecMotors[0].setTargetPosition(yTarget - xTarget);
-        driveMecMotors[1].setTargetPosition(yTarget + xTarget);
+        driveMecMotors[0].setTargetPosition(yTarget + xTarget);
+        driveMecMotors[1].setTargetPosition(yTarget - xTarget);
         driveMecMotors[2].setTargetPosition(yTarget - xTarget);
         driveMecMotors[3].setTargetPosition(yTarget + xTarget);
     }
@@ -89,17 +89,22 @@ public class DriveMecanum {
         double leftRearPower = drive - strafe + turn;
         double rightFrontPower = drive - strafe - turn;
         double rightRearPower = drive + strafe - turn;
-/*
+
         double maxPower = Math.max(Math.abs(leftFrontPower), Math.abs(leftRearPower));
         maxPower = Math.max(maxPower, Math.abs(rightFrontPower));
         maxPower = Math.max(maxPower, Math.abs(rightRearPower));
-        maxPower /= maxDrivePower;
 
-        leftFrontPower = leftFrontPower * Math.abs(leftFrontPower) / maxPower;
-        leftRearPower = leftRearPower * Math.abs(leftRearPower) / maxPower;
-        rightFrontPower = rightFrontPower * Math.abs(rightFrontPower) / maxPower;
-        rightRearPower = rightRearPower * Math.abs(rightRearPower) / maxPower;
- */
+        if (maxPower > 1.0) {
+            leftFrontPower /= maxPower;
+            leftRearPower /= maxPower;
+            rightFrontPower /= maxPower;
+            rightRearPower /= maxPower;
+        }
+
+        leftFrontPower *= maxDrivePower;
+        leftRearPower *= maxDrivePower;
+        rightFrontPower *= maxDrivePower;
+        rightRearPower *= maxDrivePower;
 
         setDrivePowers(leftFrontPower, leftRearPower, rightFrontPower, rightRearPower);
     }

@@ -22,8 +22,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -38,19 +36,16 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
-import org.openftc.easyopencv.OpenCvSwitchableWebcam;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "Red Right Top Wobble Vision", group = "Test")
+@Autonomous(name = "Test", group = "Test")
 public class
-VisionTopSingleWobble extends RobotOpModes
+Test extends RobotOpModes
 {
     OpenCvWebcam webcam;
     SkystoneDeterminationPipeline pipeline;
@@ -99,50 +94,8 @@ VisionTopSingleWobble extends RobotOpModes
         SkystoneDeterminationPipeline.RingPosition rings = pipeline.position;
 
 
-        bot.outtake.shoot(-bot.outtake.VELOCITY);
-        //new AutoComWDDrive(this, 52.0, 0.5, 90.0).Run();
-        new AutoComGyroMecDrive(this, 52.0, 0.0, 0.5).Run();
-        new AutoComGyroMecDrive(this, 0.0, -18.0, 0.5).Run();
-        while(!bot.wobbleLift.atGrabPosition()) {
-            bot.wobbleLift.downP(1.0);
-        }
-        bot.wobbleLift.stop();
-
-        bot.outtakeTrigger.rapidFireState = OuttakeTrigger.TRIGGER_STATE.FIRST_SHOT;
-        bot.outtakeTrigger.setRapidFireTime(time.now(TimeUnit.MILLISECONDS));
-        while (opModeIsActive() && bot.outtakeTrigger.rapidFireState != OuttakeTrigger.TRIGGER_STATE.UNKNOWN) {
-            bot.outtakeTrigger.rapidFire(time.now(TimeUnit.MILLISECONDS));
-        }
-
-        if(rings == SkystoneDeterminationPipeline.RingPosition.NONE) {
-            new AutoComGyroMecDrive(this, 11.0, 0.0, 0.0).Run();
-            new AutoComGyroTurn(this, 0.6, 270.0, 8.0).Run();
-            new AutoComGyroMecDrive(this, 12.0, 0.0, 0.5).Run();
-            bot.wobbleAutoClaw.open();
-            sleep(1000);
-            new AutoComGyroMecDrive(this, -6.0, 0.0, 0.5).Run();
-            new AutoComWGLift(this, 270.0).Run();
-            new AutoComGyroTurn(this, 0.6,0,8.0).Run();
-        } else if(rings == SkystoneDeterminationPipeline.RingPosition.ONE) {
-            new AutoComGyroTurn(this, 0.6, -12.0, 8.0).Run();
-            new AutoComGyroMecDrive(this, 20.0, 0.0, 0.5).Run();
-            bot.wobbleAutoClaw.open();
-            sleep(500);
-            new AutoComGyroMecDrive(this, -8.0, 0.0, 0.5).Run();
-            new AutoComGyroTurn(this, 0.6,0,8.0).Run();
-        } else if (rings == SkystoneDeterminationPipeline.RingPosition.FOUR) {
-            new AutoComGyroTurn(this, 0.75, -25.0, 4.0).Run();
-            new AutoComGyroMecDrive(this, 50.0, 0.0, 0.5).Run();
-            bot.wobbleAutoClaw.open();
-            sleep(500);
-            new AutoComGyroMecDrive(this, -30.0, 0.0, 0.5).Run();
-            new AutoComGyroTurn(this, 0.6,0,8.0).Run();
-        }
-
-
-        bot.wobbleClaw.open();
-        bot.wobbleAutoClaw.close();
-        new AutoComWGLift(this, 153.0).Run();
+        //bot.outtake.shoot(-bot.outtake.VELOCITY);
+        new AutoComGyroMecDrive(this, 0.0, 72.0, 0.3).Run();
     }
 
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline

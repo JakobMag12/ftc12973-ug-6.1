@@ -17,8 +17,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 public class WobbleLift {
     private double P = 2.0;
 
-    private double ZERO_VOLTAGE = 2.95;
-    private double GRAB_VOLTAGE = 0.8;
+    public double ZERO_VOLTAGE = 2.95;
+    public double GRAB_VOLTAGE = 0.8;
     private double PID_VOLTAGE_RANGE = 0.3;
 
     private int numLiftMotors = 1;
@@ -77,6 +77,11 @@ public class WobbleLift {
         up(P * voltageError * power);
     }
 
+    public void upPLimit(double power, double limit) {
+        double voltageError = (limit - getLimitVoltage()) / PID_VOLTAGE_RANGE;
+        up(P * voltageError * power);
+    }
+
     public void down() {
         liftMotors[0].setPower(-1.0);
     }
@@ -88,6 +93,11 @@ public class WobbleLift {
     public void downP(double power) {
         double voltageError = (getLimitVoltage() - GRAB_VOLTAGE) / PID_VOLTAGE_RANGE;
         down(P * voltageError * power);
+    }
+
+    public void downPLimit(double power, double limit) {
+        double voltageError = (limit - getLimitVoltage()) / PID_VOLTAGE_RANGE;
+        up(P * voltageError * power);
     }
 
     public void setLiftTargets(int target) {
